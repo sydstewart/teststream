@@ -119,3 +119,8 @@ with col1:
 
 css = '''
 <style>
+    .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
+    font-size:1.5rem;
+    }
+</style>
+'''

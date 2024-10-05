@@ -8,7 +8,7 @@ st.set_page_config(
 )
 
 
-st.header('Run Charts')
+st.header('Dateformats.py')
 
 col1, col2 = st.columns([1,3])
 
@@ -19,23 +19,24 @@ with col1:
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=Upload data
             uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-            if uploaded_file is not None:
-                df = pd.read_csv(uploaded_file )
-                # st.subheader("Data Preview")
-                st.write(df)
-            
-                datecol = st.selectbox(
-                    "Select Date ",
-                    (list(df.columns)),
-                    )
-                meascol = st.selectbox(
-                    "Select Measure ",
-                    (list(df.columns)),
-                    )
-                freq= st.selectbox( 'Select Frequecy',
-                            ('Monthly', 'Weekly', 'Daily'))
+            # if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file )
+            # st.subheader("Data Preview")
+            st.write(df.head(3))
+        
+            datecol = st.selectbox(
+                "Select Date ",
+                (list(df.columns)),
+                )
+            meascol = st.selectbox(
+                "Select Measure ",
+                (list(df.columns)),
+                )
+            freq= st.selectbox( 'Select Frequecy',
+                        ('Monthly', 'Weekly', 'Daily'))
+            st.write(df[datecol])
 with col2:
-
+            
             df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)
 
             # st.write('df',df)
@@ -68,26 +69,10 @@ with col2:
             min_value = datetime.strptime(min(Date), '%Y-%m-%d')
             value = (min_value, max_value)
 
-            # st.write('Value', value)
-
-            # st.dataframe(data=df)
-            # st.column_config.DateColumn(df["YM"], format="YYYY-MM-DD")       
-            # df.reset_index(inplace=True) 
-            # convert to datetime data type, then grab just the date part (default year first)
-            # df['index'] = pd.to_datetime(df['index']).dt.date     
-
-            # st.write(df)
-
-            # min_date = df.index.min()
-            # max_date = df.index.max()
-
-
-            # st.write('Minimum date:', min_value)
-            # st.write('Maximum date:', max_value)
             label = 'Month  Range'
 
             value = (min_value, max_value)
-            st.write('value',min_value, max_value )
+            # st.write('value',min_value, max_value )
 
             Model = st.slider(
                 'Date:',

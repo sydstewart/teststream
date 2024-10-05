@@ -16,24 +16,24 @@ st.header('Dateformats.py')
 
 
 
-#             #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=Upload data
-#             uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+            #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=Upload data
+            uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-#             if uploaded_file is not None:
-#                 df = pd.read_csv(uploaded_file )
-#                 # st.subheader("Data Preview")
-#                 st.write(df)
+            if uploaded_file is not None:
+                df = pd.read_csv(uploaded_file )
+                # st.subheader("Data Preview")
+                st.write(df)
             
-#                 datecol = st.selectbox(
-#                     "Select Date ",
-#                     (list(df.columns)),
-#                     )
-#                 meascol = st.selectbox(
-#                     "Select Measure ",
-#                     (list(df.columns)),
-#                     )
-#                 freq= st.selectbox( 'Select Frequecy',
-#                             ('Monthly', 'Weekly', 'Daily'))
+                datecol = st.selectbox(
+                    "Select Date ",
+                    (list(df.columns)),
+                    )
+                meascol = st.selectbox(
+                    "Select Measure ",
+                    (list(df.columns)),
+                    )
+                freq= st.selectbox( 'Select Frequecy',
+                            ('Monthly', 'Weekly', 'Daily'))
 # with col2:
 
 #             df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)

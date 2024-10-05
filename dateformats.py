@@ -13,16 +13,15 @@ st.header('Dateformats.py')
 col1, col2 = st.columns([1,3])
 
 with col1:
+     
+    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-
-
-            #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=Upload data
-            uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-
-            # if uploaded_file is not None:
+    if uploaded_file is not None:
             df = pd.read_csv(uploaded_file )
             # st.subheader("Data Preview")
             st.write(df.head(3))
+            
+
         
             datecol = st.selectbox(
                 "Select Date ",
@@ -35,10 +34,9 @@ with col1:
             freq= st.selectbox( 'Select Frequecy',
                         ('Monthly', 'Weekly', 'Daily'))
             st.write(df[datecol])
-with col2:
-            
-            df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)
 
+        # if not df.empty  :   
+            
             # st.write('df',df)
 
             # st.write('YM Date adjusted',df['YM'])
@@ -49,7 +47,7 @@ with col2:
                     freq = 'W-SUN'
             else: 
                     freq = 'D'
-
+            df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)
             first_date = df[datecol].min()
             fin_date = df[datecol].max()
           
@@ -73,12 +71,11 @@ with col2:
 
             value = (min_value, max_value)
             # st.write('value',min_value, max_value )
-
             Model = st.slider(
-                'Date:',
-                min_value=min_value,
-                max_value=max_value,
-                value=value, step= timedelta(weeks =4), format ="YYYY-MM-DD")
+                    'Date:',
+                    min_value=min_value,
+                    max_value=max_value,
+                    value=value, step= timedelta(weeks =4), format ="YYYY-MM-DD")
 
             selmin, selmax = Model
             st.write(' From Slider', selmin,selmax)
@@ -90,9 +87,11 @@ with col2:
 
             df = df.loc[(df[datecol] >= selmind) & (df[datecol] <= selmaxd)]
 
+           
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Plotly Charts
-            tab1, tab2 = st.tabs(["📈 Chart", "🗃 Data"])
+            
             #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+          
             fig = go.Figure()
 
             df['Median'] = df[meascol].median()
@@ -103,26 +102,20 @@ with col2:
                                 mode='lines',
                                 name='Median'))
 
-
+# with col2:
+        
+    # # st.plotly_chart(fig,use_container_width=True)
+    # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=List if Dates
+    # tab1, tab2 = st.tabs(["📈 Chart", "🗃 Data"])
+    # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tabs   
+    # # st.line_chart(data= df, x= "YM", y="Problem_Cases"     )
+    # with tab1:
     
-# st.plotly_chart(fig,use_container_width=True)
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=List if Dates
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tabs   
-# st.line_chart(data= df, x= "YM", y="Problem_Cases"     )
-with tab1:
-    st.header("Run Chart")
-    st.plotly_chart(fig,use_container_width=True)
-with tab2:
-    st.header("Data table")
-    st.write(df)
+            st.header("Run Chart")
+            st.plotly_chart(fig,use_container_width=True)
+# with tab2:
+            st.header("Data table")
+            st.write(df)
 
 css = '''
 <style>
-    .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
-    font-size:1.5rem;
-    }
-</style>
-'''
-
-st.markdown(css, unsafe_allow_html=True)

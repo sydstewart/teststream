@@ -25,97 +25,96 @@ if uploaded_file is not None:
     
         datecol = st.selectbox(
             "Select Date ",
-            (list(df.columns)),
+            (list(df.columns)),index=None,placeholder ="Choose a date column",
             )
         meascol = st.selectbox(
             "Select Measure ",
-            (list(df.columns)),
+            (list(df.columns)),index=None, placeholder="Select a Measure...",
             )
-        freq= st.selectbox( 'Select Frequecy',
-                    ('Monthly', 'Weekly', 'Daily'))
-        st.write(df[datecol])
+        freq = st.selectbox( 
+             "Select Frequency",
+            ('Monthly', 'Weekly', 'Daily'),index= None, placeholder ="Select a Time Interval..",
+            )
+        if datecol != None and meascol != None and freq != None: 
+          
+                st.write(df[datecol])
 
-    # if not df.empty  :   
+                if freq== 'Monthly':
+                        freq = 'MS'
+                elif freq == 'Week':
+                        freq = 'W-SUN'
+                else: 
+                        freq = 'D'
         
-        # st.write('df',df)
+                df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)
+                first_date = df[datecol].min()
+                fin_date = df[datecol].max()
+                
+            
+                all_dates = pd.DataFrame({datecol:pd.date_range(start=first_date, end=fin_date,freq=freq)})
+                # st.write('all', all_dates)
 
-        # st.write('YM Date adjusted',df['YM'])
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++Fill in zero months
-        if freq== 'Monthly':
-                freq = 'MS'
-        elif freq == 'Week':
-                freq = 'W-SUN'
-        else: 
-                freq = 'D'
-        df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)
-        first_date = df[datecol].min()
-        fin_date = df[datecol].max()
-        
-    
-        all_dates = pd.DataFrame({datecol:pd.date_range(start=first_date, end=fin_date,freq=freq)})
-        # st.write('all', all_dates)
+                df = pd.merge(all_dates, df, how="left", on=datecol).fillna(0)
 
-        df = pd.merge(all_dates, df, how="left", on=datecol).fillna(0)
+                #===========================================================================
+                df[datecol] = df[datecol].dt.strftime('%Y-%m-%d')
+                Date = df[datecol].unique().tolist()
 
-        #===========================================================================
-        df[datecol] = df[datecol].dt.strftime('%Y-%m-%d')
-        Date = df[datecol].unique().tolist()
+                # ggggst.write('Date', Date)
 
-        # ggggst.write('Date', Date)
+                max_value = datetime.strptime(max(Date), '%Y-%m-%d')
+                min_value = datetime.strptime(min(Date), '%Y-%m-%d')
+                value = (min_value, max_value)
 
-        max_value = datetime.strptime(max(Date), '%Y-%m-%d')
-        min_value = datetime.strptime(min(Date), '%Y-%m-%d')
-        value = (min_value, max_value)
+                label = 'Month  Range'
 
-        label = 'Month  Range'
+                value = (min_value, max_value)
+                # st.write('value',min_value, max_value )
+                Model = st.slider(
+                        'Date:',
+                        min_value=min_value,
+                        max_value=max_value,
+                        value=value, step= timedelta(weeks =4), format ="YYYY-MM-DD")
 
-        value = (min_value, max_value)
-        # st.write('value',min_value, max_value )
-        Model = st.slider(
-                'Date:',
-                min_value=min_value,
-                max_value=max_value,
-                value=value, step= timedelta(weeks =4), format ="YYYY-MM-DD")
+                selmin, selmax = Model
+                st.write(' From Slider', selmin,selmax)
+                selmind = selmin.strftime('%Y-%m-%d')  # datetime to str
+                selmaxd = selmax.strftime('%Y-%m-%d')
 
-        selmin, selmax = Model
-        st.write(' From Slider', selmin,selmax)
-        selmind = selmin.strftime('%Y-%m-%d')  # datetime to str
-        selmaxd = selmax.strftime('%Y-%m-%d')
+                # st.write('Selmind:', selmin, selmind)
+                # st.write('Selmaxd:', selmax, selmaxd)
 
-        # st.write('Selmind:', selmin, selmind)
-        # st.write('Selmaxd:', selmax, selmaxd)
+                df = df.loc[(df[datecol] >= selmind) & (df[datecol] <= selmaxd)]
 
-        df = df.loc[(df[datecol] >= selmind) & (df[datecol] <= selmaxd)]
+                
+                #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Plotly Charts
+                
+                #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                
+                fig = go.Figure()
 
-        
-        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Plotly Charts
-        
-        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        
-        fig = go.Figure()
+                df['Median'] = df[meascol].median()
+                df[datecol] = pd.to_datetime(df[datecol])
+                # Add traces
+                fig.add_trace(go.Scatter(x= df[datecol], y= df[meascol], mode='lines+markers', name= 'Cases'))
+                fig.add_trace(go.Scatter(x= df[datecol], y = df['Median'],
+                                    mode='lines',
+                                    name='Median'))
 
-        df['Median'] = df[meascol].median()
-        df[datecol] = pd.to_datetime(df[datecol])
-        # Add traces
-        fig.add_trace(go.Scatter(x= df[datecol], y= df[meascol], mode='lines+markers', name= 'Cases'))
-        fig.add_trace(go.Scatter(x= df[datecol], y = df['Median'],
-                            mode='lines',
-                            name='Median'))
-
-# with col2:
-        
-    # # st.plotly_chart(fig,use_container_width=True)
-    # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=List if Dates
-    # tab1, tab2 = st.tabs(["📈 Chart", "🗃 Data"])
-    # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tabs   
-    # # st.line_chart(data= df, x= "YM", y="Problem_Cases"     )
-    # with tab1:
-    
-        st.header("Run Chart")
-        st.plotly_chart(fig,use_container_width=True)
-        # with tab2:
-        st.header("Data table")
-        st.write(df)
+        # with col2:
+                
+            # # st.plotly_chart(fig,use_container_width=True)
+            # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=List if Dates
+            # tab1, tab2 = st.tabs(["📈 Chart", "🗃 Data"])
+            # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tabs   
+            # # st.line_chart(data= df, x= "YM", y="Problem_Cases"     )
+            # with tab1:
+            
+                st.header("Run Chart")
+                st.plotly_chart(fig,use_container_width=True)
+                # with tab2:
+                st.header("Data table")
+                st.write(df)
 
 css = '''
 <style>

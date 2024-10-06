@@ -12,32 +12,32 @@ st.header('Run Charts')
 
 col1, col2 = st.columns([1,3])
 
-# with col1:
+with col1:
      
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+        uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file )
-        # st.subheader("Data Preview")
-        st.write(df.head(3))
-        
+        if uploaded_file is not None:
+                df = pd.read_csv(uploaded_file )
+                # st.subheader("Data Preview")
+                st.write(df.head(3))
+                
 
-    
-        datecol = st.selectbox(
-            "Select Date ",
-            (list(df.columns)),index=None,placeholder ="Choose a date column",
-            )
-        meascol = st.selectbox(
-            "Select Measure ",
-            (list(df.columns)),index=None, placeholder="Select a Measure...",
-            )
-        freq = st.selectbox( 
-             "Select Frequency",
-            ('Monthly', 'Weekly', 'Daily'),index= None, placeholder ="Select a Time Interval..",
-            )
-        if datecol != None and meascol != None and freq != None: 
-          
-                st.write(df[datecol])
+            
+                datecol = st.selectbox(
+                    "Select Date ",
+                    (list(df.columns)),index=None,placeholder ="Choose a date column",
+                    )
+                meascol = st.selectbox(
+                    "Select Measure ",
+                    (list(df.columns)),index=None, placeholder="Select a Measure...",
+                    )
+                freq = st.selectbox( 
+                    "Select Frequency",
+                    ('Monthly', 'Weekly', 'Daily'),index= None, placeholder ="Select a Time Interval..",
+                    )
+        if uploaded_file is not None: 
+            if datecol != None and meascol != None and freq != None: 
+                # st.write(df[datecol])
 
                 if freq== 'Monthly':
                         freq = 'MS'
@@ -45,7 +45,7 @@ if uploaded_file is not None:
                         freq = 'W-SUN'
                 else: 
                         freq = 'D'
-        
+
                 df[datecol] = pd.to_datetime(df[datecol], dayfirst = True)
                 first_date = df[datecol].min()
                 fin_date = df[datecol].max()
@@ -70,6 +70,11 @@ if uploaded_file is not None:
 
                 value = (min_value, max_value)
                 # st.write('value',min_value, max_value )
+                
+with col2:                
+    if uploaded_file is not None: 
+        if datecol != None and meascol != None and freq != None:  
+               
                 Model = st.slider(
                         'Date:',
                         min_value=min_value,
@@ -101,20 +106,17 @@ if uploaded_file is not None:
                                     mode='lines',
                                     name='Median'))
 
-        # with col2:
-                
-            # # st.plotly_chart(fig,use_container_width=True)
-            # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=List if Dates
-            # tab1, tab2 = st.tabs(["📈 Chart", "🗃 Data"])
-            # #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tabs   
-            # # st.line_chart(data= df, x= "YM", y="Problem_Cases"     )
-            # with tab1:
-            
-                st.header("Run Chart")
-                st.plotly_chart(fig,use_container_width=True)
-                # with tab2:
-                st.header("Data table")
-                st.write(df)
+
+            #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=List if Dates
+                tab1, tab2 = st.tabs(["📈 Chart", "🗃 Data"])
+            #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Tabs   
+            # st.line_chart(data= df, x= "YM", y="Problem_Cases"     )
+                with tab1:
+                   st.header("Run Chart")
+                   st.plotly_chart(fig,use_container_width=True)
+                with tab2:
+                    st.header("Data table")
+                    st.write(df)
 
 css = '''
 <style>

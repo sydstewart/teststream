@@ -118,6 +118,9 @@ with col2:
                     st.header("Data table")
                     st.write(df)
 
+conn = st.connection("postgresql", type="sql")
+
+
 css = '''
 <style>
     .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {

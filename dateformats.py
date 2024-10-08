@@ -9,7 +9,8 @@ st.set_page_config(
 
 
 st.header('Run Charts')
-
+st.page_link("dateformats.py", label="Home", icon="🏠")
+st.page_link("pages/cont.py", label="Filtering by Checkboxes", icon="1️⃣")
 col1, col2 = st.columns([1,3])
 
 with col1:

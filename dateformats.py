@@ -119,7 +119,7 @@ with col2:
                     st.header("Data table")
                     st.write(df)
 
-conn = st.connection("postgresql", type="sql")
+
 
 
 css = '''

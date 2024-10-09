@@ -4,6 +4,10 @@ import numpy as np
 from datetime import date, datetime
 np.random.seed(0)
 
+#To keep settings when swapping pages
+for k, v in st.session_state.items():
+    st.session_state[k] = v
+
 # toy data
 def get_data():
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")

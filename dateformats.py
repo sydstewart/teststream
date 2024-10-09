@@ -15,7 +15,7 @@ st.set_page_config(
 st.header('Run Charts')
 st.page_link("dateformats.py", label="Home", icon="🏠")
 st.page_link("pages/cont.py", label="Filtering by Checkboxes", icon="1️⃣")
-st.page_link("pages/modelchecks.py", label="Test Filtering of Cases", icon="2️⃣", disabled=False)
+# st.page_link("pages/modelchecks.py", label="Test Filtering of Cases", icon="2️⃣", disabled=False)
 col1, col2 = st.columns([1,3])
 
 with col1:

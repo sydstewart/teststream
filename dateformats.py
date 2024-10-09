@@ -3,6 +3,10 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objs as go
 
+#To keep settings when swapping pages
+for k, v in st.session_state.items():
+    st.session_state[k] = v
+    
 st.set_page_config(
     layout="wide",
 )
